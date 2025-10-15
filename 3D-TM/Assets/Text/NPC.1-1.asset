@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2fc0b5628cd9ad46889d73908128a95, type: 3}
+  m_Name: NPC.1-1
+  m_EditorClassIdentifier: 
+  NPCID: 1
+  DialogName: DW-Ghost
+  DialogStatus: 2
+  dialoguedatas:
+  - charName: DW-Ghost
+    NameColor: {r: 1, g: 1, b: 1, a: 0}
+    Dialogue: "\u6211\u77E5\u9053\u4F60\u60F3\u9003\u79BB\u8FD9\u91CC\uFF0C\u4F46\u8DEF\u5DF2\u7ECF\u88AB\u963B\u6321\u4F4F\u4E86\u3002\u5E2E\u6211\u89E3\u51B3\u4E00\u4E2A\u95EE\u9898\uFF0C\u6211\u53EF\u4EE5\u4E3A\u4F60\u6253\u5F00\u4E00\u6247\u95E8\u3002"
+    diaselect:
+    - next: 1
+      selectText: "\u63A5\u53D7"
+    - next: 2
+      selectText: "\u62D2\u7EDD"
+    Event: 
+    end: 0
+  - charName: DW-Ghost
+    NameColor: {r: 1, g: 1, b: 1, a: 0}
+    Dialogue: "\u90A3\u73B0\u5728\u5C31\u5F00\u59CB\u5427\u3002"
+    diaselect: []
+    Event: 
+    end: 1
+  - charName: DW-Ghost
+    NameColor: {r: 1, g: 1, b: 1, a: 0}
+    Dialogue: "\u6211\u76F8\u4FE1\u4F60\u4F1A\u518D\u6765\u7684\u3002"
+    diaselect: []
+    Event: 
+    end: 1
