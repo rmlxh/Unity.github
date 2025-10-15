@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unity项目展示 | 九章幻境</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7C3AED', // 主色调：紫色
+            secondary: '#EC4899', // 辅助色：粉色
+            dark: '#0F172A', // 深色背景
+            light: '#F8FAFC', // 浅色文本
+            accent: '#3B82F6', // 强调色：蓝色
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .bg-grid {
+        background-image: radial-gradient(rgba(124, 58, 237, 0.1) 1px, transparent 1px);
+        background-size: 30px 30px;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+
+  <style>
+    /* 基础动画和过渡 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1E293B;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #7C3AED;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6D28D9;
+    }
+
+    /* 加载动画 */
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #7C3AED;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* 在现有样式中添加 */
+    #mobileMenu {
+      z-index: 99;
+      /* 确保菜单显示在其他内容上方 */
+    }
+
+    /* 轮播图样式 */
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.75rem;
+    }
+
+    .carousel-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      backface-visibility: hidden;
+      width: 100%;
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-controls {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+      padding: 0 1rem;
+    }
+
+    .carousel-control {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .carousel-control:hover {
+      background-color: rgba(124, 58, 237, 0.7);
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: 1rem;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .carousel-indicator {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .carousel-indicator.active {
+      background-color: #7C3AED;
+    }
+
+    /* 在现有样式中添加以下代码 */
+    .carousel-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 360px;
+      /* 固定轮播图高度，根据需要调整 */
+      overflow: hidden;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      /* 保持图片比例，完整显示在容器内 */
+      /* 可选：如果希望填满容器但允许裁剪，使用 object-fit: cover; */
+    }
+
+    /* 针对特别长的图片可以单独设置最大高度 */
+    .carousel-slide img.tall-image {
+      max-height: 100%;
+      width: auto;
+    }
+  </style>
+</head>
+
+<body class="font-inter bg-dark text-light overflow-x-hidden">
+  <!-- 顶部导航 -->
+  <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold text-gradient bg-gradient-to-r from-primary to-secondary">九章幻境</a>
+
+      <nav class="hidden md:flex space-x-8">
+        <!-- 添加返回主页按钮 - 桌面端 -->
+        <a href="https://rmlxh.github.io/LXR-Resume.github.io/" target="_blank" rel="noopener noreferrer"
+          class="hover:text-primary transition-colors flex items-center">我的主页</a>
+        <a href="#overview" class="hover:text-primary transition-colors">项目概览</a>
+        <a href="#role" class="hover:text-primary transition-colors">我的角色</a>
+        <a href="#process" class="hover:text-primary transition-colors">创作过程</a>
+        <a href="#成果" class="hover:text-primary transition-colors">最终成果</a>
+        <a href="#tech" class="hover:text-primary transition-colors">技术细节</a>
+      </nav>
+
+      <button class="md:hidden text-2xl p-2" id="menuToggle" style="z-index: 100;">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- 移动端菜单 -->
+    <div
+      class="md:hidden bg-dark/95 backdrop-blur-md absolute w-full left-0 top-full transform -translate-y-full opacity-0 transition-all duration-300"
+      id="mobileMenu">
+      <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+        <!-- 添加返回主页按钮 - 移动端 -->
+        <a href="https://rmlxh.github.io/LXR-Resume.github.io/" target="_blank" rel="noopener noreferrer"
+          class="hover:text-primary transition-colors flex items-center">我的主页</a>
+        <a href="#overview" class="py-2 hover:text-primary transition-colors">项目概览</a>
+        <a href="#role" class="py-2 hover:text-primary transition-colors">我的角色</a>
+        <a href="#process" class="py-2 hover:text-primary transition-colors">创作过程</a>
+        <a href="#成果" class="py-2 hover:text-primary transition-colors">最终成果</a>
+        <a href="#tech" class="py-2 hover:text-primary transition-colors">技术细节</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 英雄区域 -->
+  <section class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden bg-grid">
+    <div class="absolute inset-0 bg-gradient-to-b from-dark/80 to-dark"></div>
+
+    <!-- 装饰元素 -->
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/20 blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-secondary/20 blur-3xl"></div>
+
+    <div class="container mx-auto px-4 py-16 relative z-10">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold leading-tight mb-6">
+          <span class="text-gradient bg-gradient-to-r from-primary to-secondary">九章幻境</span>
+        </h1>
+        <p class="text-[clamp(1.1rem,3vw,1.5rem)] text-gray-300 mb-10 leading-relaxed">
+          一款将中国古代数学经典《九章算术》融入核心玩法的2D解谜冒险游戏，玩家在探索中通过解答数学谜题推动剧情。
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="#overview"
+            class="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-full font-medium transition-all hover:shadow-lg hover:shadow-primary/20 transform hover:-translate-y-1">
+            了解更多
+          </a>
+          <a href="#成果"
+            class="px-8 py-3 bg-transparent border-2 border-primary text-primary hover:bg-primary/10 rounded-full font-medium transition-all transform hover:-translate-y-1">
+            查看演示
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 滚动指示器 -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <i class="fa fa-angle-down text-2xl text-gray-400"></i>
+    </div>
+  </section>
+
+  <!-- 项目概览 -->
+  <section id="overview" class="py-20 relative">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">项目概览</h2>
+
+        <div class="grid md:grid-cols-2 gap-8 items-center reveal">
+          <div class="order-2 md:order-1">
+            <h3 class="text-2xl font-semibold mb-4 text-primary">项目简介</h3>
+            <p class="text-gray-300 mb-6 leading-relaxed">
+              《九章幻境》是一款以 Unity 2D 引擎开发，围绕《九章算术》主题打造的探索解谜类游戏。玩家将在幻境中探索未知，发现谜题并解开其中深藏的奥秘。
+            </p>
+            <p class="text-gray-300 mb-6 leading-relaxed">
+              游戏以 “梦境异世界” 为核心背景，玩家将在梦中进入一个充满奇幻色彩的场景，接受异世界角色的求助，通过与 NPC
+              交互答题、规避危险怪物、收集回血道具等方式，完成九道题目挑战即可通关，在探索过程中潜移默化地感受传统数学文化的魅力，兼具娱乐性与知识性。
+            </p>
+          </div>
+          <div class="order-1 md:order-2 relative">
+            <div
+              class="rounded-xl overflow-hidden shadow-2xl shadow-primary/20 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+              <img src="images/NCF1.png" alt="游戏场景展示" class="w-full h-auto">
+            </div>
+            <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-secondary/20 rounded-lg blur-xl"></div>
+          </div>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
+          <div
+            class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-gamepad text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">游戏玩法</h3>
+            <p class="text-gray-400">玩家从游戏开始界面进入后，将置身于初始场景，核心目标是答对九道与《九章算术》相关的题目。流程遵循 “探索场景→寻找 NPC→触发对话→答题→继续探索”
+              的循环，期间需规避危险、管理血量，直至完成所有题目或血量耗尽结束游戏。</p>
+          </div>
+
+          <div
+            class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-users text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">目标受众</h3>
+            <p class="text-gray-400">10-16 岁青少年群体，该阶段用户处于数学知识学习关键期，游戏的答题玩法可与课堂知识形成联动，帮助其在娱乐中巩固知识，同时培养对传统数学文化的兴趣。</p>
+          </div>
+
+          <div
+            class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-rocket text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">项目愿景</h3>
+            <p class="text-gray-400">以《九章算术》这一中国古代数学经典为核心，打破传统文化传播的 “书本化” 局限，通过游戏场景、NPC
+              对话、题目设计等环节，让玩家在探索中了解《九章算术》的历史背景与数学思想，实现 “寓教于乐” 的文化传承目标。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 我的角色 -->
+  <section id="role" class="py-20 bg-gradient-to-b from-dark to-dark/90 relative">
+    <div class="absolute inset-0 bg-grid opacity-50"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">我的角色</h2>
+
+        <div class="bg-gray-900/60 backdrop-blur-md p-8 rounded-2xl border border-gray-800 mb-12 reveal">
+          <div class="flex items-center mb-6">
+            <div class="w-16 h-16 rounded-full overflow-hidden mr-6 border-2 border-primary">
+              <img src="images/mypicture.png" alt="开发者照片" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold">李秀如</h3>
+              <p class="text-primary">独立游戏开发者</p>
+            </div>
+          </div>
+
+          <p class="text-gray-300 mb-6 leading-relaxed">
+            在《九章幻境》项目中，我并非单一环节的执行者，而是 “创意 - 开发 - 设计 - 测试” 全流程的主导者，独立解决了 “传统数学文化如何趣味化呈现”、“Unity 2D 多模块协同开发”
+            等核心问题，最终落地了一款兼具 “知识性、娱乐性、完整性” 的独立游戏。整个过程不仅体现了我在 Unity 开发、游戏策划等方面的综合能力，更展现了独立解决复杂问题、推动项目闭环的执行力。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
+          <div class="bg-gray-900/40 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fa fa-code text-primary mr-2"></i>
+              技术开发
+            </h3>
+            <ul class="space-y-3 text-gray-300">
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>不同功能模块的实现</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>物理碰撞与交互逻辑</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>角色动画控制</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>资源与流程控制</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-gray-900/40 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fa fa-paint-brush text-primary mr-2"></i>
+              游戏设计
+            </h3>
+            <ul class="space-y-3 text-gray-300">
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>主题与世界观设计</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>角色与 AI 行为设计</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>状态管理与反馈设计</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>玩法与机制设计</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 创作过程 -->
+  <section id="process" class="py-20 relative">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">创作过程</h2>
+
+        <div class="space-y-24 reveal">
+          <!-- 阶段1: 设计思路 -->
+          <div class="mb-24 reveal">
+            <div class="text-center mb-12">
+              <span
+                class="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">阶段一</span>
+              <h3 class="text-3xl font-bold mb-4">设计思路</h3>
+              <p class="text-gray-400 max-w-2xl mx-auto">项目初始的概念设计与规划阶段</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+              <div class="md:w-1/2">
+                <div class="rounded-xl overflow-hidden shadow-xl">
+                  <img src="images/NCF8.png" alt="设计思路" class="w-full h-auto">
+                </div>
+              </div>
+              <div class="md:w-1/2">
+                <p class="text-gray-300 mb-4 leading-relaxed">
+                  基于《九章算术》这个核心元素，以 “轻量化交互体验” 作为核心设计理念，本项目通过模块化拆分角色控制、任务系统、UI
+                  反馈等功能，实现低耦合的代码架构；以直观的操作逻辑和清晰的状态反馈降低用户门槛，同时通过 AI 行为的简洁化设计与场景流程的自动化管理，平衡游戏趣味性与开发效率。
+                </p>
+                <p class="text-gray-300 leading-relaxed">
+                  “角色探索 + 问答任务” 作为核心玩法，可规划玩家核心行为链：通过移动探索场景→与 NPC
+                  交互接取任务→触发问答挑战→完成任务（累计分数）或失败（生命值耗尽）→场景跳转。围绕该链条拆分核心模块，明确角色控制、任务载体、问答交互、场景流转四大核心组件的职责边界，确保流程闭环。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 阶段2: 核心功能开发 -->
+          <div class="mb-24 reveal">
+            <div class="text-center mb-12">
+              <span
+                class="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">阶段二</span>
+              <h3 class="text-3xl font-bold mb-4">核心功能开发</h3>
+              <p class="text-gray-400 max-w-2xl mx-auto">基于设计思路，实现项目的核心功能与技术框架</p>
+            </div>
+
+            <!-- 子模块1: 玩家控制器实现 -->
+            <div class="mb-16">
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">1</span>
+                玩家控制器实现
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="order-2 md:order-1">
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    设计并开发PlayerController核心脚本，实现玩家移动、角色状态管理、交互逻辑及动画状态同步。
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    关键功能：键盘输入响应（上下左右移动、T 键对话、Q 键触发问题、Esc 键退出）、生命值动态更新与 UI 同步、无敌状态计时器管理。
+                  </p>
+                </div>
+
+                <div class="order-1 md:order-2">
+                  <!-- 轮播图 -->
+                  <div class="carousel relative" id="architectureCarousel">
+                    <div class="carousel-slides">
+                      <div class="carousel-slide">
+                        <img src="images/2.1.an1.png" alt="动画机1" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.1.an2.png" alt="动画机2" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.1.an3.png" alt="动画机3" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.1.an4.png" alt="玩家控制器脚本1" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.1.an5.png" alt="玩家控制器脚本2" class="w-full h-full object-cover">
+                      </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                      <button class="carousel-control prev" data-target="architectureCarousel">
+                        <i class="fa fa-angle-left"></i>
+                      </button>
+                      <button class="carousel-control next" data-target="architectureCarousel">
+                        <i class="fa fa-angle-right"></i>
+                      </button>
+                    </div>
+
+                    <div class="carousel-indicators" data-target="architectureCarousel">
+                      <button class="carousel-indicator active" data-slide-to="0"></button>
+                      <button class="carousel-indicator" data-slide-to="1"></button>
+                      <button class="carousel-indicator" data-slide-to="2"></button>
+                      <button class="carousel-indicator" data-slide-to="3"></button>
+                      <button class="carousel-indicator" data-slide-to="4"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 子模块2: 敌人与动物 AI 行为 -->
+            <div class="mb-16">
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">2</span>
+                敌人与动物 AI 行为
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <!-- 轮播图 -->
+                  <div class="carousel relative" id="renderingCarousel">
+                    <div class="carousel-slides">
+                      <div class="carousel-slide">
+                        <img src="images/2.2.e1.png" alt="敌人1" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.2.e2.png" alt="敌人2" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.2.e3.png" alt="受伤" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.2.a4.png" alt="动物1" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.2.a5.png" alt="动物2" class="w-full h-full object-cover">
+                      </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                      <button class="carousel-control prev" data-target="renderingCarousel">
+                        <i class="fa fa-angle-left"></i>
+                      </button>
+                      <button class="carousel-control next" data-target="renderingCarousel">
+                        <i class="fa fa-angle-right"></i>
+                      </button>
+                    </div>
+
+                    <div class="carousel-indicators" data-target="renderingCarousel">
+                      <button class="carousel-indicator active" data-slide-to="0"></button>
+                      <button class="carousel-indicator" data-slide-to="1"></button>
+                      <button class="carousel-indicator" data-slide-to="2"></button>
+                      <button class="carousel-indicator" data-slide-to="3"></button>
+                      <button class="carousel-indicator" data-slide-to="4"></button>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    分别开发EnemyController与AnimalsController脚本，实现自动巡逻逻辑：基于计时器定时切换移动方向（水平 /
+                    垂直可配置），通过Rigidbody2D.MovePosition实现平滑移动；
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    敌人添加碰撞检测逻辑，与玩家碰撞时触发玩家生命值减少；
+                  </p>
+                  <p class="text-gray-300 leading-relaxed">
+                    动物角色增加动画状态控制。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 子模块3: NPC 对话系统 -->
+            <div>
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">3</span>
+                NPC 对话系统
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="order-2 md:order-1">
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    开发NPCDialog脚本，实现 NPC 与玩家的交互功能：对话框自动显示与定时关闭；
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    绑定 UI 文本组件，支持对话内容动态更新，关联任务状态标记。
+                  </p>
+                </div>
+
+                <div class="order-1 md:order-2">
+                  <!-- 轮播图 -->
+                  <div class="carousel relative" id="interactionSystemCarousel">
+                    <div class="carousel-slides">
+                      <div class="carousel-slide">
+                        <img src="images/2.3.t1.png" alt="对话1" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.3.t2.png" alt="对话2" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.3.t3.png" alt="对话3" class="w-full h-full object-cover">
+                      </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                      <button class="carousel-control prev" data-target="interactionSystemCarousel">
+                        <i class="fa fa-angle-left"></i>
+                      </button>
+                      <button class="carousel-control next" data-target="interactionSystemCarousel">
+                        <i class="fa fa-angle-right"></i>
+                      </button>
+                    </div>
+
+                    <div class="carousel-indicators" data-target="interactionSystemCarousel">
+                      <button class="carousel-indicator active" data-slide-to="0"></button>
+                      <button class="carousel-indicator" data-slide-to="1"></button>
+                      <button class="carousel-indicator" data-slide-to="2"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 子模块4: 道具系统实现 -->
+            <div class="mb-16">
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">4</span>
+                道具系统实现
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <div class="carousel-slides">
+                    <div class="carousel-slide">
+                      <img src="images/2.4.d.png" alt="加血道具" class="w-full h-full object-cover">
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    开发HealthCollectible脚本，实现生命值道具功能：基于触发检测判断玩家是否拾取；
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    仅在玩家未满血时生效，拾取后销毁道具并增加生命值，关联音效组件。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 阶段3: 技术难点与解决方案 -->
+          <div class="mb-24 reveal">
+            <div class="text-center mb-12">
+              <span
+                class="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">阶段三</span>
+              <h3 class="text-3xl font-bold mb-4">技术难点与解决方案</h3>
+              <p class="text-gray-400 max-w-2xl mx-auto">开发过程中遇到的挑战及应对策略</p>
+            </div>
+
+            <!-- 子模块1: 问答任务系统 -->
+            <div class="mb-16">
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                问答任务系统
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="order-2 md:order-1">
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    设计Question与QuestionDialog脚本，实现多题问答交互：管理 9 个问题的显示 / 隐藏状态，正确回答时销毁问题触发物并累加分数；
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    分数达到目标（9 分）时自动跳转胜利场景，错误回答触发玩家生命值扣除；
+                  </p>
+                  <p class="text-gray-300 leading-relaxed">
+                    通过 UI 文本实时显示当前分数，实现任务进度可视化。
+                  </p>
+                </div>
+
+                <div class="order-1 md:order-2">
+                  <!-- 轮播图 -->
+                  <div class="carousel relative" id="questionCarousel">
+                    <div class="carousel-slides">
+                      <div class="carousel-slide">
+                        <img src="images/3.1.png" alt="答题1" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/3.2.png" alt="答题2" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/3.3.png" alt="答题3" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/3.4.png" alt="答题4" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/3.5.png" alt="答题5" class="w-full h-full object-cover">
+                      </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                      <button class="carousel-control prev" data-target="questionCarousel">
+                        <i class="fa fa-angle-left"></i>
+                      </button>
+                      <button class="carousel-control next" data-target="questionCarousel">
+                        <i class="fa fa-angle-right"></i>
+                      </button>
+                    </div>
+
+                    <div class="carousel-indicators" data-target="questionCarousel">
+                      <button class="carousel-indicator active" data-slide-to="0"></button>
+                      <button class="carousel-indicator" data-slide-to="1"></button>
+                      <button class="carousel-indicator" data-slide-to="2"></button>
+                      <button class="carousel-indicator" data-slide-to="3"></button>
+                      <button class="carousel-indicator" data-slide-to="4"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <!-- 最终成果 -->
+  <section id="成果" class="py-20 bg-gradient-to-b from-dark/90 to-dark relative">
+    <div class="absolute inset-0 bg-grid opacity-50"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">最终成果</h2>
+
+        <!-- 视频演示 - 方案一：直接在HTML中播放小视频 (已启用) -->
+        <div class="mb-16 reveal">
+          <div class="aspect-video rounded-xl overflow-hidden shadow-2xl shadow-primary/20">
+            <!-- 
+              这是修改后的视频播放代码，使用HTML5的video标签直接在页面中播放视频
+              controls: 显示播放控制条（播放/暂停、音量、全屏等）
+              poster: 视频加载前显示的封面图
+              preload="metadata": 预先加载视频元数据（时长、尺寸等），优化加载速度
+              source标签: 指定视频文件路径和类型
+            -->
+            <video controls class="w-full h-full object-cover" poster="videos/NCF-V-fm.jpg" <!-- 视频封面图 -->
+              preload="metadata">
+              <source src="videos/NCF-V.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+
+        <!-- 游戏截图 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16 reveal">
+          <div
+            class="rounded-xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+            <img src="images/NCF2.png" alt="游戏截图2" class="w-full h-auto">
+          </div>
+          <div
+            class="rounded-xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+            <img src="images/NCF3.png" alt="游戏截图3" class="w-full h-auto">
+          </div>
+          <div
+            class="rounded-xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+            <img src="images/NCF4.png" alt="游戏截图4" class="w-full h-auto">
+          </div>
+          <div
+            class="rounded-xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+            <img src="images/NCF5.png" alt="游戏截图5" class="w-full h-auto">
+          </div>
+        </div>
+
+        <!-- 特性亮点 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
+          <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-globe text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2"> 文化与玩法深度绑定</h3>
+            <p class="text-gray-400">区别于 “答题 + 场景” 简单叠加的传统教育游戏，本项目将《九章算术》的文化内核与游戏玩法、场景、角色深度绑定，实现 “玩即学、学即玩” 的沉浸式文化传播</p>
+          </div>
+
+          <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-rocket text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">低门槛高容错的 “探索 + 生存” 双循环玩法</h3>
+            <p class="text-gray-400">针对核心受众，设计 “探索找题 + 生存避险” 的双循环玩法，既保证探索的自由度与趣味性，又通过低门槛、高容错的规则降低上手难度，让不同操作水平的玩家都能获得良好体验
+            </p>
+          </div>
+
+          <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-comments text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">流畅的角色动画</h3>
+            <p class="text-gray-400">通过 Unity Blend Tree技术，实现角色 “上 / 下 / 左 / 右” 四个方向的 “静止 - 移动” 动画无缝过渡，避免传统 2D 游戏的 “卡顿感”
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 技术细节 -->
+  <section id="tech" class="py-20 relative">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">技术细节</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 reveal">
+          <div>
+            <h3 class="text-2xl font-semibold mb-6 text-primary">开发工具</h3>
+
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-unity text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">Unity 2022.3.6 f1c1</h4>
+                  <p class="text-gray-400 text-sm">游戏引擎</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-code text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">C#</h4>
+                  <p class="text-gray-400 text-sm">编程语言</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-paint-brush text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">Adobe Photoshop 2022</h4>
+                  <p class="text-gray-400 text-sm">2D贴图与纹理</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-music text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">WPS Office</h4>
+                  <p class="text-gray-400 text-sm">文档与汇报</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-6 text-primary">核心技术</h3>
+
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-cubes text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">Blend Tree动画控制</h4>
+                  <p class="text-gray-400 text-sm">实现角色动画的平滑过渡，解决传统“状态机切换”导致的动画卡顿问题。</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-lightbulb-o text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">基于 Trigger 的交互逻辑触发</h4>
+                  <p class="text-gray-400 text-sm">实现“玩家与 NPC 对话”、“答题触发”、“道具收集”、“怪物扣血”等核心交互功能。</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-cogs text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">多场景界面适配与跳转</h4>
+                  <p class="text-gray-400 text-sm">实现游戏全场景的统一管理与无缝跳转。</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-database text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">基于状态变量的游戏进度与数据管理</h4>
+                  <p class="text-gray-400 text-sm">实时记录与管理“答题进度”、“玩家血量”、“道具状态”等核心数据。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系部分 -->
+  <section class="py-20 bg-gradient-to-b from-dark to-dark/90 relative">
+    <div class="absolute inset-0 bg-grid opacity-50"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto text-center reveal">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-6">对项目感兴趣？</h2>
+        <p class="text-gray-300 mb-10 text-lg">
+          无论您是想了解更多技术细节，还是探讨合作机会，都欢迎与我联系！
+        </p>
+
+        <!-- 按钮组 -->
+        <div class="flex flex-wrap justify-center gap-4">
+          <!-- 发送邮件按钮 -->
+          <a href="mailto:343724601@qq.com?subject=关于《九章幻境》项目&body=你好，我对这个项目很感兴趣..."
+            class="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-full font-medium transition-all hover:shadow-lg hover:shadow-primary/20 flex items-center">
+            <i class="fa fa-envelope mr-2"></i> 发送邮件
+          </a>
+
+          <!-- GitHub按钮 需要修改链接-->
+          <a href="https://github.com/rmlxh/Unity2D-NCF.github.io" target="_blank" rel="noopener noreferrer"
+            class="px-8 py-3 bg-transparent border-2 border-primary text-primary hover:bg-primary/10 rounded-full font-medium transition-all flex items-center">
+            <i class="fa fa-github mr-2"></i> GitHub
+          </a>
+        </div>
+
+        <!-- 提示文本（移至按钮下方） -->
+        <span class="ml-4 text-gray-400">或直接发送邮件至: 343724601@qq.com</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="py-10 bg-dark border-t border-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-6 md:mb-0">
+          <a href="#" class="text-2xl font-bold text-gradient bg-gradient-to-r from-primary to-secondary">
+            九章幻境
+          </a>
+
+          <p class="text-gray-400 mt-2">© 2025 李秀如. 保留所有权利.</p>
+        </div>
+
+        <div class="flex space-x-6">
+          <!-- GitHub -->
+          <a href="https://github.com/rmlxh" target="_blank" rel="noopener noreferrer"
+            class="text-gray-400 hover:text-primary transition-colors">
+            <i class="fa fa-github text-xl"></i>
+          </a>
+
+          <!-- 微信 -->
+          <div class="relative group">
+            <a href="#" class="text-gray-400 hover:text-primary transition-colors cursor-pointer">
+              <i class="fa fa-weixin text-xl"></i>
+            </a>
+            <div
+              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
+              <div class="bg-white p-2 rounded-lg shadow-lg">
+                <img src="images/wx.png" alt="微信二维码" class="w-499 h-499 object-cover">
+                <div class="text-center mt-1 text-sm text-gray-800 whitespace-nowrap">微信扫一扫</div>
+              </div>
+              <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-dark/95', 'backdrop-blur-md', 'shadow-lg');
+      } else {
+        navbar.classList.remove('bg-dark/95', 'backdrop-blur-md', 'shadow-lg');
+      }
+    });
+
+    // 移动端菜单
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+
+    menuToggle.addEventListener('click', (e) => {
+      e.preventDefault(); // 新增：阻止默认行为
+      e.stopPropagation(); // 新增：阻止事件冒泡
+
+      if (menuOpen) {
+        mobileMenu.classList.remove('opacity-100', 'translate-y-0');
+        mobileMenu.classList.add('-translate-y-full', 'opacity-0');
+        menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+      } else {
+        mobileMenu.classList.remove('-translate-y-full', 'opacity-0');
+        mobileMenu.classList.add('opacity-100', 'translate-y-0');
+        menuToggle.innerHTML = '<i class="fa fa-times"></i>';
+      }
+      menuOpen = !menuOpen;
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+
+          // 关闭移动菜单
+          if (menuOpen) {
+            mobileMenu.classList.remove('opacity-100', 'translate-y-0');
+            mobileMenu.classList.add('-translate-y-full', 'opacity-0');
+            menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+            menuOpen = false;
+          }
+        }
+      });
+    });
+
+    // 滚动动画
+    const revealElements = document.querySelectorAll('.reveal');
+
+    function checkReveal() {
+      const windowHeight = window.innerHeight;
+      const revealPoint = 150;
+
+      revealElements.forEach(element => {
+        const revealTop = element.getBoundingClientRect().top;
+
+        if (revealTop < windowHeight - revealPoint) {
+          element.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkReveal);
+    window.addEventListener('load', checkReveal);
+
+    // 初始检查
+    checkReveal();
+
+    // 轮播图功能
+    document.addEventListener('DOMContentLoaded', function () {
+      // 初始化所有轮播图
+      const carousels = document.querySelectorAll('.carousel');
+      carousels.forEach(carousel => {
+        initCarousel(carousel);
+      });
+    });
+
+    function initCarousel(carousel) {
+      const carouselId = carousel.id;
+      const slidesContainer = carousel.querySelector('.carousel-slides');
+      const slides = carousel.querySelectorAll('.carousel-slide');
+      const prevButton = carousel.querySelector('.carousel-control.prev');
+      const nextButton = carousel.querySelector('.carousel-control.next');
+      const indicators = carousel.querySelectorAll('.carousel-indicator');
+
+      let currentSlide = 0;
+      const slideCount = slides.length;
+
+      // 每个轮播项宽度设为100%
+      slides.forEach(slide => {
+        slide.style.width = '100%';
+      });
+
+      // 更新轮播图显示
+      function updateCarousel() {
+        // 计算滑动距离：当前索引 * 容器宽度
+        const slideDistance = -currentSlide * slidesContainer.offsetWidth;
+        slidesContainer.style.transform = `translateX(${slideDistance}px)`;
+
+        // 更新指示器
+        indicators.forEach((indicator, index) => {
+          if (index === currentSlide) {
+            indicator.classList.add('active');
+          } else {
+            indicator.classList.remove('active');
+          }
+        });
+      }
+
+      // 前一张按钮点击事件
+      prevButton.addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+        updateCarousel();
+      });
+
+      // 后一张按钮点击事件
+      nextButton.addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % slideCount;
+        updateCarousel();
+      });
+
+      // 指示器点击事件
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          currentSlide = index;
+          updateCarousel();
+        });
+      });
+
+      // 自动轮播
+      let autoplayInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % slideCount;
+        updateCarousel();
+      }, 5000);
+
+      // 鼠标悬停时暂停自动轮播
+      carousel.addEventListener('mouseenter', () => {
+        clearInterval(autoplayInterval);
+      });
+
+      // 鼠标离开时恢复自动轮播
+      carousel.addEventListener('mouseleave', () => {
+        autoplayInterval = setInterval(() => {
+          currentSlide = (currentSlide + 1) % slideCount;
+          updateCarousel();
+        }, 5000);
+      });
+
+      // 初始化显示第一张
+      updateCarousel();
+    }
+  </script>
+</body>
+
+</html>
