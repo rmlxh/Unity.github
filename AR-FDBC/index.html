@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unity项目展示 | 非遗：福鼎白茶制作技艺</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7C3AED', // 主色调：紫色
+            secondary: '#EC4899', // 辅助色：粉色
+            dark: '#0F172A', // 深色背景
+            light: '#F8FAFC', // 浅色文本
+            accent: '#3B82F6', // 强调色：蓝色
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .bg-grid {
+        background-image: radial-gradient(rgba(124, 58, 237, 0.1) 1px, transparent 1px);
+        background-size: 30px 30px;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+
+  <style>
+    /* 基础动画和过渡 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1E293B;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #7C3AED;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6D28D9;
+    }
+
+    /* 加载动画 */
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #7C3AED;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* 在现有样式中添加 */
+    #mobileMenu {
+      z-index: 99;
+      /* 确保菜单显示在其他内容上方 */
+    }
+
+    /* 轮播图样式 */
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.75rem;
+    }
+
+    .carousel-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      backface-visibility: hidden;
+      width: 100%;
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-controls {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+      padding: 0 1rem;
+    }
+
+    .carousel-control {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .carousel-control:hover {
+      background-color: rgba(124, 58, 237, 0.7);
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: 1rem;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .carousel-indicator {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .carousel-indicator.active {
+      background-color: #7C3AED;
+    }
+
+    /* 在现有样式中添加以下代码 */
+    .carousel-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 360px;
+      /* 固定轮播图高度，根据需要调整 */
+      overflow: hidden;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      /* 保持图片比例，完整显示在容器内 */
+      /* 可选：如果希望填满容器但允许裁剪，使用 object-fit: cover; */
+    }
+
+    /* 针对特别长的图片可以单独设置最大高度 */
+    .carousel-slide img.tall-image {
+      max-height: 100%;
+      width: auto;
+    }
+  </style>
+</head>
+
+<body class="font-inter bg-dark text-light overflow-x-hidden">
+  <!-- 顶部导航 -->
+  <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold text-gradient bg-gradient-to-r from-primary to-secondary">
+        非遗：福鼎白茶制作技艺
+      </a>
+
+      <nav class="hidden md:flex space-x-8">
+        <!-- 添加返回主页按钮 - 桌面端 -->
+        <a href="https://rmlxh.github.io/Resume.github.io/" target="_blank" rel="noopener noreferrer"
+          class="hover:text-primary transition-colors flex items-center">我的主页</a>
+        <a href="#overview" class="hover:text-primary transition-colors">项目概览</a>
+        <a href="#role" class="hover:text-primary transition-colors">我的角色</a>
+        <a href="#process" class="hover:text-primary transition-colors">创作过程</a>
+        <a href="#成果" class="hover:text-primary transition-colors">最终成果</a>
+        <a href="#tech" class="hover:text-primary transition-colors">技术细节</a>
+      </nav>
+
+      <button class="md:hidden text-2xl p-2" id="menuToggle" style="z-index: 100;">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- 移动端菜单 -->
+    <div
+      class="md:hidden bg-dark/95 backdrop-blur-md absolute w-full left-0 top-full transform -translate-y-full opacity-0 transition-all duration-300"
+      id="mobileMenu">
+      <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+        <!-- 添加返回主页按钮 - 移动端 -->
+        <a href="https://rmlxh.github.io/Resume.github.io/" target="_blank" rel="noopener noreferrer"
+          class="hover:text-primary transition-colors flex items-center">我的主页</a>
+        <a href="#overview" class="py-2 hover:text-primary transition-colors">项目概览</a>
+        <a href="#role" class="py-2 hover:text-primary transition-colors">我的角色</a>
+        <a href="#process" class="py-2 hover:text-primary transition-colors">创作过程</a>
+        <a href="#成果" class="py-2 hover:text-primary transition-colors">最终成果</a>
+        <a href="#tech" class="py-2 hover:text-primary transition-colors">技术细节</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 英雄区域 -->
+  <section class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden bg-grid">
+    <div class="absolute inset-0 bg-gradient-to-b from-dark/80 to-dark"></div>
+
+    <!-- 装饰元素 -->
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/20 blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-secondary/20 blur-3xl"></div>
+
+    <div class="container mx-auto px-4 py-16 relative z-10">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold leading-tight mb-6">
+          <span class="text-gradient bg-gradient-to-r from-primary to-secondary">非遗：福鼎白茶制作技艺</span>
+        </h1>
+        <p class="text-[clamp(1.1rem,3vw,1.5rem)] text-gray-300 mb-10 leading-relaxed">
+          一款基于 Unity AR 技术打造的项目，通过识别特定图像，让用户沉浸式体验福鼎白茶产区介绍、采摘到品饮的制作流程及相关传说，还可借助 AI 答疑，助力非遗茶文化传播。
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="#overview"
+            class="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-full font-medium transition-all hover:shadow-lg hover:shadow-primary/20 transform hover:-translate-y-1">
+            了解更多
+          </a>
+          <a href="#成果"
+            class="px-8 py-3 bg-transparent border-2 border-primary text-primary hover:bg-primary/10 rounded-full font-medium transition-all transform hover:-translate-y-1">
+            查看演示
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 滚动指示器 -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <i class="fa fa-angle-down text-2xl text-gray-400"></i>
+    </div>
+  </section>
+
+  <!-- 项目概览 -->
+  <section id="overview" class="py-20 relative">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">项目概览</h2>
+
+        <div class="grid md:grid-cols-2 gap-8 items-center reveal">
+          <div class="order-2 md:order-1">
+            <h3 class="text-2xl font-semibold mb-4 text-primary">项目简介</h3>
+            <p class="text-gray-300 mb-6 leading-relaxed">
+              本项目是一款以 “福鼎白茶非遗文化传承” 为核心的 Unity AR 交互作品，通过虚实融合技术将福鼎白茶的地理产区、制作工艺与文化传说转化为沉浸式体验。
+            </p>
+            <p class="text-gray-300 mb-6 leading-relaxed">
+              项目以 5 张专属识别图为交互入口，构建了从 “认知产区” 到 “体验工艺” 再到 “感知文化” 的完整内容链路，既还原了福鼎白茶 “自然萎凋、不炒不揉”
+              的非遗制作技艺，又通过音频讲解、三维模型、视频资料等多媒体形式，传递 “一年茶、三年药、七年宝” 的茶文化内涵。
+            </p>
+            <p class="text-gray-300 mb-6 leading-relaxed">
+              右侧为五张识别图，分别对应不同的内容模块，用户通过识别图像即可触发相关的 AR 场景与交互体验。
+            </p>
+          </div>
+          <div class="order-1 md:order-2 relative">
+              <!-- 轮播图 -->
+              <div class="carousel relative" id="architectureCarousel">
+                <div class="carousel-slides">
+                  <div class="carousel-slide">
+                    <img src="images/1.jpg" alt="识别图1" class="w-full h-full object-cover">
+                  </div>
+                  <div class="carousel-slide">
+                    <img src="images/3.png" alt="识别图2" class="w-full h-full object-cover">
+                  </div>
+                  <div class="carousel-slide">
+                    <img src="images/4.png" alt="识别图3" class="w-full h-full object-cover">
+                  </div>
+                  <div class="carousel-slide">
+                    <img src="images/5.png" alt="识别图4" class="w-full h-full object-cover">
+                  </div>
+                  <div class="carousel-slide">
+                    <img src="images/6.png" alt="识别图5" class="w-full h-full object-cover">
+                  </div>
+                </div>
+
+                <div class="carousel-controls">
+                  <button class="carousel-control prev" data-target="architectureCarousel">
+                    <i class="fa fa-angle-left"></i>
+                  </button>
+                  <button class="carousel-control next" data-target="architectureCarousel">
+                    <i class="fa fa-angle-right"></i>
+                  </button>
+                </div>
+
+                <div class="carousel-indicators" data-target="architectureCarousel">
+                  <button class="carousel-indicator active" data-slide-to="0"></button>
+                  <button class="carousel-indicator" data-slide-to="1"></button>
+                  <button class="carousel-indicator" data-slide-to="2"></button>
+                  <button class="carousel-indicator" data-slide-to="3"></button>
+                  <button class="carousel-indicator" data-slide-to="4"></button>
+                </div>
+              </div>
+
+            <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-secondary/20 rounded-lg blur-xl"></div>
+          </div>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
+          <div
+            class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-gamepad text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">游戏玩法</h3>
+            <p class="text-gray-400">以 “识别图触发 + 场景交互” 为核心玩法，操作逻辑清晰且门槛低</p>
+          </div>
+
+          <div
+            class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-users text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">目标受众</h3>
+            <p class="text-gray-400">青少年群体，茶文化爱好者与茶行业从业者，文旅体验者与游客，教育机构与非遗保护单位</p>
+          </div>
+
+          <div
+            class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-rocket text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">项目愿景</h3>
+            <p class="text-gray-400">打破传统图文传播的局限，以 AR 技术让福鼎白茶的产地风貌、制作工艺、历史传说 “活起来”，助力非遗文化与地方特色产业的传承</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 我的角色 -->
+  <section id="role" class="py-20 bg-gradient-to-b from-dark to-dark/90 relative">
+    <div class="absolute inset-0 bg-grid opacity-50"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">我的角色</h2>
+
+        <div class="bg-gray-900/60 backdrop-blur-md p-8 rounded-2xl border border-gray-800 mb-12 reveal">
+          <div class="flex items-center mb-6">
+            <div class="w-16 h-16 rounded-full overflow-hidden mr-6 border-2 border-primary">
+              <img src="images/mypicture.png" alt="开发者照片" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold">李秀如</h3>
+              <p class="text-primary">独立开发者</p>
+            </div>
+          </div>
+
+          <p class="text-gray-300 mb-6 leading-relaxed">
+            作为 Unity AR 项目独立开发者，负责从技术架构设计到功能落地的全流程开发，成功打造融合 AR 交互与智能问答的沉浸式体验项目。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
+          <div class="bg-gray-900/40 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fa fa-code text-primary mr-2"></i>
+              技术开发
+            </h3>
+            <ul class="space-y-3 text-gray-300">
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>多模式触摸交互算法实现</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>AI 接口通信与数据解析架构</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>模块化场景管理系统</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>配置与业务逻辑解耦设计</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-gray-900/40 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fa fa-paint-brush text-primary mr-2"></i>
+              游戏设计
+            </h3>
+            <ul class="space-y-3 text-gray-300">
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>设分层交互操作体系</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>即时反馈式问答交互</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>场景内容逻辑串联</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                <span>轻量化交互门槛设计</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 创作过程 -->
+  <section id="process" class="py-20 relative">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">创作过程</h2>
+
+        <div class="space-y-24 reveal">
+          <!-- 阶段1: 设计思路 -->
+          <div class="mb-24 reveal">
+            <div class="text-center mb-12">
+              <span
+                class="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">阶段一</span>
+              <h3 class="text-3xl font-bold mb-4">设计思路</h3>
+              <p class="text-gray-400 max-w-2xl mx-auto">项目初始的概念设计与规划阶段</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+              <div class="md:w-1/2">
+                <div class="rounded-xl overflow-hidden shadow-xl">
+                  <img src="images/swdt.png" alt="设计思路" class="w-full h-auto">
+                </div>
+              </div>
+              <div class="md:w-1/2">
+                <p class="text-gray-300 mb-4 leading-relaxed">
+                  本项目旨在通过 AR 技术实现福鼎白茶文化的沉浸式传播，核心设计思路围绕 “技术赋能文化传播” 展开，以用户交互体验为核心，整合 AR 交互、智能问答与场景化内容呈现。
+                </p>
+                <p class="text-gray-300 leading-relaxed">
+                  聚焦福鼎白茶的 “产区认知 - 制作流程 - 文化传说” 三大信息维度，通过 AR 技术打破传统信息传播的平面化限制，让用户通过识别相关图像，触发虚拟三维模型、音视频解说及智能问答，实现 “现实场景 +
+                  虚拟内容” 的深度融合，降低用户获取白茶文化知识的门槛。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 阶段2: 核心功能开发 -->
+          <div class="mb-24 reveal">
+            <div class="text-center mb-12">
+              <span
+                class="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">阶段二</span>
+              <h3 class="text-3xl font-bold mb-4">核心功能开发</h3>
+              <p class="text-gray-400 max-w-2xl mx-auto">基于设计思路，实现项目的核心功能与技术框架</p>
+            </div>
+
+            <!-- 子模块1: AR 交互核心功能开发 -->
+            <div class="mb-16">
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">1</span>
+                AR 交互核心功能开发
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="order-2 md:order-1">
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    三维模型交互系统：独立开发脚本，实现模型的触摸交互功能，支持单点触摸下的三种旋转模式（自由旋转 / 水平旋转 / 上下旋转）及多点触摸缩放，通过变量控制旋转逻辑，并限制缩放范围，优化用户对白茶模型、产区地图的细节观察体验。
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    场景切换与流程控制：基于 Unity 的SceneManager实现多场景管理，支持首页与 5 个 AR 识别图场景的快速跳转及程序退出功能，保障用户在不同内容模块间的流畅切换。
+                  </p>
+                </div>
+
+                <div class="order-1 md:order-2">
+                  <!-- 轮播图 -->
+                  <div class="carousel relative" id="architectureCarousel">
+                    <div class="carousel-slides">
+                      <div class="carousel-slide">
+                        <img src="images/2.1.1.png" alt="三维模型交互1" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.1.2.png" alt="三维模型交互2" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.1.3.png" alt="三维模型交互3" class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.1.4.png" alt="场景切换与流程控制" class="w-full h-full object-cover">
+                      </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                      <button class="carousel-control prev" data-target="architectureCarousel">
+                        <i class="fa fa-angle-left"></i>
+                      </button>
+                      <button class="carousel-control next" data-target="architectureCarousel">
+                        <i class="fa fa-angle-right"></i>
+                      </button>
+                    </div>
+
+                    <div class="carousel-indicators" data-target="architectureCarousel">
+                      <button class="carousel-indicator active" data-slide-to="0"></button>
+                      <button class="carousel-indicator" data-slide-to="1"></button>
+                      <button class="carousel-indicator" data-slide-to="2"></button>
+                      <button class="carousel-indicator" data-slide-to="3"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 子模块2: UI 交互与用户体验优化 -->
+            <div class="mb-16">
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">2</span>
+                UI 交互与用户体验优化
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <!-- 轮播图 -->
+                  <div class="carousel relative" id="renderingCarousel">
+                    <div class="carousel-slides">
+                      <div class="carousel-slide">
+                        <img src="images/2.2.1.png" alt="功能按钮逻辑实现1"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.2.2.png" alt="功能按钮逻辑实现2"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.2.3.png" alt="输入输出交互设计"
+                          class="w-full h-full object-cover">
+                      </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                      <button class="carousel-control prev" data-target="renderingCarousel">
+                        <i class="fa fa-angle-left"></i>
+                      </button>
+                      <button class="carousel-control next" data-target="renderingCarousel">
+                        <i class="fa fa-angle-right"></i>
+                      </button>
+                    </div>
+
+                    <div class="carousel-indicators" data-target="renderingCarousel">
+                      <button class="carousel-indicator active" data-slide-to="0"></button>
+                      <button class="carousel-indicator" data-slide-to="1"></button>
+                      <button class="carousel-indicator" data-slide-to="2"></button>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    功能按钮逻辑实现：为场景中的虚拟按钮绑定事件，解析按钮名称，动态切换模型旋转模式，并重置模型角度，降低用户操作学习成本。
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    输入输出交互设计：关联 UI 组件，在用户提交问题后清空输入框并显示加载状态提示，提升交互反馈清晰度。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 子模块3: 多媒体内容整合与 AR 场景构建 -->
+            <div>
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                <span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">3</span>
+                多媒体内容整合与 AR 场景构建
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="order-2 md:order-1">
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    识别图触发逻辑：基于 Unity AR 技术，将 5 张识别图与对应虚拟内容（关联，实现现实场景与虚拟信息的精准叠加。
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    基于Chaos物理系统，实现了真实的物体物理模拟，包括刚体碰撞、约束和布料模拟。优化了物理性能，确保复杂场景下的稳定运行。
+                  </p>
+                  <p class="text-gray-300 leading-relaxed">
+                    多模态内容呈现：整合三维模型、音频解说、工艺演示视频等资源，通过 AR 交互串联 “产区介绍 - 制作流程 - 文化传说” 完整内容链条，打造沉浸式信息获取体验。
+                  </p>
+                </div>
+
+                <div class="order-1 md:order-2">
+                  <!-- 轮播图 -->
+                  <div class="carousel relative" id="interactionSystemCarousel">
+                    <div class="carousel-slides">
+                      <div class="carousel-slide">
+                        <img src="images/2.3.1.png" alt="识别图触发逻辑"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.3.2.png" alt="多模态内容呈现1"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.3.3.png" alt="多模态内容呈现2"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.3.4.png" alt="多模态内容呈现3"
+                          class="w-full h-full object-cover">
+                      </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                      <button class="carousel-control prev" data-target="interactionSystemCarousel">
+                        <i class="fa fa-angle-left"></i>
+                      </button>
+                      <button class="carousel-control next" data-target="interactionSystemCarousel">
+                        <i class="fa fa-angle-right"></i>
+                      </button>
+                    </div>
+
+                    <div class="carousel-indicators" data-target="interactionSystemCarousel">
+                      <button class="carousel-indicator active" data-slide-to="0"></button>
+                      <button class="carousel-indicator" data-slide-to="1"></button>
+                      <button class="carousel-indicator" data-slide-to="2"></button>
+                      <button class="carousel-indicator" data-slide-to="3"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 阶段3: 技术难点与解决方案 -->
+          <div class="reveal">
+            <div class="text-center mb-12">
+              <span
+                class="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">阶段三</span>
+              <h3 class="text-3xl font-bold mb-4">技术难点与解决方案</h3>
+              <p class="text-gray-400 max-w-2xl mx-auto">开发过程中遇到的挑战及应对策略</p>
+            </div>
+
+            <!-- 子模块: AI 智能问答模块集成 -->
+            <div class="mb-16">
+              <h4 class="text-2xl font-semibold mb-6 text-primary flex items-center">
+                AI 智能问答模块集成
+              </h4>
+
+              <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <!-- 轮播图 -->
+                  <div class="carousel relative" id="renderingCarousel">
+                    <div class="carousel-slides">
+                      <div class="carousel-slide">
+                        <img src="images/2.4.1.png" alt="第三方 API 对接1"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.4.2.png" alt="第三方 API 对接2"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.4.3.png" alt="数据解析与响应处理1"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.4.4.png" alt="数据解析与响应处理2"
+                          class="w-full h-full object-cover">
+                      </div>
+                      <div class="carousel-slide">
+                        <img src="images/2.4.5.png" alt="UI界面"
+                          class="w-full h-full object-cover">
+                      </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                      <button class="carousel-control prev" data-target="renderingCarousel">
+                        <i class="fa fa-angle-left"></i>
+                      </button>
+                      <button class="carousel-control next" data-target="renderingCarousel">
+                        <i class="fa fa-angle-right"></i>
+                      </button>
+                    </div>
+
+                    <div class="carousel-indicators" data-target="renderingCarousel">
+                      <button class="carousel-indicator active" data-slide-to="0"></button>
+                      <button class="carousel-indicator" data-slide-to="1"></button>
+                      <button class="carousel-indicator" data-slide-to="2"></button>
+                      <button class="carousel-indicator" data-slide-to="3"></button>
+                      <button class="carousel-indicator" data-slide-to="4"></button>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    第三方 API 对接：通过 UnityWebRequest 实现与 DeepSeek 大语言模型的 HTTP 通信，封装请求头与请求参数，支持用户输入文本的实时提交。
+                  </p>
+                  <p class="text-gray-300 mb-4 leading-relaxed">
+                    数据解析与响应处理：定义DeepSeekResponse、Choice等序列化类，解析 API 返回的 JSON 数据，提取 AI 回答内容并展示在 UI 文本组件中，同时处理网络请求异常，确保问答功能稳定性。
+                  </p>
+                  <p class="text-gray-300 leading-relaxed">
+                    配置管理：静态类统一管理 API 密钥，实现配置与业务逻辑解耦，便于后期密钥更新与维护。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 最终成果 -->
+  <section id="成果" class="py-20 bg-gradient-to-b from-dark/90 to-dark relative">
+    <div class="absolute inset-0 bg-grid opacity-50"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">最终成果</h2>
+
+        <!-- 视频演示 - 方案一：直接在HTML中播放小视频 (已启用) -->
+        <div class="mb-16 reveal">
+          <div class="aspect-video rounded-xl overflow-hidden shadow-2xl shadow-primary/20">
+            <!-- 
+              这是修改后的视频播放代码，使用HTML5的video标签直接在页面中播放视频
+              controls: 显示播放控制条（播放/暂停、音量、全屏等）
+              poster: 视频加载前显示的封面图
+              preload="metadata": 预先加载视频元数据（时长、尺寸等），优化加载速度
+              source标签: 指定视频文件路径和类型
+            -->
+            <video controls class="w-full h-full object-cover" poster="videos/fm.jpg" <!-- 视频封面图
+              -->
+              preload="metadata">
+              <source src="videos/AR-FDBC.mp4" type="video/mp4">
+              您的浏览器不支持视频播放。
+            </video>
+          </div>
+        </div>
+
+        <!-- 游戏截图 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16 reveal">
+          <div
+            class="rounded-xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+            <img src="images/jt1.png" alt="游戏截图1" class="w-full h-auto">
+          </div>
+          <div
+            class="rounded-xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+            <img src="images/jt2.png" alt="游戏截图2" class="w-full h-auto">
+          </div>
+          <div
+            class="rounded-xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+            <img src="images/jt3.png" alt="游戏截图3" class="w-full h-auto">
+          </div>
+          <div
+            class="rounded-xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+            <img src="images/jt4.png" alt="游戏截图4" class="w-full h-auto">
+          </div>
+        </div>
+
+        <!-- 特性亮点 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
+          <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-globe text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">多模式 AR 模型交互系统</h3>
+            <p class="text-gray-400">精细化触摸交互逻辑，支持单点触摸下的三种旋转模式及多点触摸缩放功能，用户可根据需求灵活切换操作方式</p>
+          </div>
+
+          <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-rocket text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">轻量化 AI 问答集成</h3>
+            <p class="text-gray-400">基于 DeepSeek 大语言模型 API 构建智能问答模块，实现数据序列化 / 反序列化，支持用户实时查询白茶相关知识</p>
+          </div>
+
+          <div class="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <i class="fa fa-comments text-primary text-xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">模块化场景流程设计</h3>
+            <p class="text-gray-400">实现多场景的快速切换与退出功能，用户可通过 UI 按钮在 “产区介绍 - 制作流程 - 文化传说” 等内容模块间无缝跳转，确保信息传递的逻辑连贯性</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 技术细节 -->
+  <section id="tech" class="py-20 relative">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-12 text-center reveal">技术细节</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 reveal">
+          <div>
+            <h3 class="text-2xl font-semibold mb-6 text-primary">开发工具</h3>
+
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-unity text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">Unity 2022.3.6 f1c1</h4>
+                  <p class="text-gray-400 text-sm">游戏引擎</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-code text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">C#</h4>
+                  <p class="text-gray-400 text-sm">编程语言</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-paint-brush text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">Adobe Photoshop 2022</h4>
+                  <p class="text-gray-400 text-sm">2D贴图与纹理</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-music text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">3ds Max 2022</h4>
+                  <p class="text-gray-400 text-sm">3D美术资源制作</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-6 text-primary">核心技术</h3>
+
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-cubes text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">多模式触摸交互控制系统</h4>
+                  <p class="text-gray-400 text-sm">通过区分单点/多点触摸事件，支持三维模型的旋转及缩放</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-lightbulb-o text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">AI 问答模块的网络通信架构</h4>
+                  <p class="text-gray-400 text-sm">封装与 DeepSeek 大语言模型的 HTTP 通信流程</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-cogs text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">模块化场景管理系统</h4>
+                  <p class="text-gray-400 text-sm">多场景的高效切换与程序退出功能</p>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mr-4">
+                  <i class="fa fa-database text-primary text-xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-medium">配置与业务逻辑解耦设计</h4>
+                  <p class="text-gray-400 text-sm">通过静态类集中管理 API 密钥</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系部分 -->
+  <section class="py-20 bg-gradient-to-b from-dark to-dark/90 relative">
+    <div class="absolute inset-0 bg-grid opacity-50"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto text-center reveal">
+        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold mb-6">对项目感兴趣？</h2>
+        <p class="text-gray-300 mb-10 text-lg">
+          无论您是想了解更多技术细节，还是探讨合作机会，都欢迎与我联系！
+        </p>
+
+        <!-- 按钮组 -->
+        <div class="flex flex-wrap justify-center gap-4">
+          <!-- 发送邮件按钮 -->
+          <a href="mailto:343724601@qq.com?subject=关于《非遗：福鼎白茶制作技艺》项目&body=你好，我对这个项目很感兴趣..."
+            class="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-full font-medium transition-all hover:shadow-lg hover:shadow-primary/20 flex items-center">
+            <i class="fa fa-envelope mr-2"></i> 发送邮件
+          </a>
+
+          <!-- GitHub按钮 - 需要修改的地方 -->
+          <a href="https://github.com/rmlxh/你的项目名" target="_blank" rel="noopener noreferrer"
+            class="px-8 py-3 bg-transparent border-2 border-primary text-primary hover:bg-primary/10 rounded-full font-medium transition-all flex items-center">
+            <i class="fa fa-github mr-2"></i> GitHub
+          </a>
+        </div>
+
+        <!-- 提示文本（移至按钮下方） -->
+        <span class="ml-4 text-gray-400">或直接发送邮件至: 343724601@qq.com</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="py-10 bg-dark border-t border-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-6 md:mb-0">
+          <a href="#" class="text-2xl font-bold text-gradient bg-gradient-to-r from-primary to-secondary">
+            非遗：福鼎白茶制作技艺 <!-- 需要修改 -->
+          </a>
+
+          <p class="text-gray-400 mt-2">© 2025 李秀如. 保留所有权利.</p>
+        </div>
+
+        <div class="flex space-x-6">
+          <!-- GitHub -->
+          <a href="https://github.com/rmlxh" target="_blank" rel="noopener noreferrer"
+            class="text-gray-400 hover:text-primary transition-colors">
+            <i class="fa fa-github text-xl"></i>
+          </a>
+
+          <!-- 微信 -->
+          <div class="relative group">
+            <a href="#" class="text-gray-400 hover:text-primary transition-colors cursor-pointer">
+              <i class="fa fa-weixin text-xl"></i>
+            </a>
+            <div
+              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
+              <div class="bg-white p-2 rounded-lg shadow-lg">
+                <img src="images/wx.png" alt="微信二维码" class="w-499 h-499 object-cover">
+                <div class="text-center mt-1 text-sm text-gray-800 whitespace-nowrap">微信扫一扫</div>
+              </div>
+              <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-dark/95', 'backdrop-blur-md', 'shadow-lg');
+      } else {
+        navbar.classList.remove('bg-dark/95', 'backdrop-blur-md', 'shadow-lg');
+      }
+    });
+
+    // 移动端菜单
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+
+    menuToggle.addEventListener('click', (e) => {
+      e.preventDefault(); // 新增：阻止默认行为
+      e.stopPropagation(); // 新增：阻止事件冒泡
+
+      if (menuOpen) {
+        mobileMenu.classList.remove('opacity-100', 'translate-y-0');
+        mobileMenu.classList.add('-translate-y-full', 'opacity-0');
+        menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+      } else {
+        mobileMenu.classList.remove('-translate-y-full', 'opacity-0');
+        mobileMenu.classList.add('opacity-100', 'translate-y-0');
+        menuToggle.innerHTML = '<i class="fa fa-times"></i>';
+      }
+      menuOpen = !menuOpen;
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+
+          // 关闭移动菜单
+          if (menuOpen) {
+            mobileMenu.classList.remove('opacity-100', 'translate-y-0');
+            mobileMenu.classList.add('-translate-y-full', 'opacity-0');
+            menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+            menuOpen = false;
+          }
+        }
+      });
+    });
+
+    // 滚动动画
+    const revealElements = document.querySelectorAll('.reveal');
+
+    function checkReveal() {
+      const windowHeight = window.innerHeight;
+      const revealPoint = 150;
+
+      revealElements.forEach(element => {
+        const revealTop = element.getBoundingClientRect().top;
+
+        if (revealTop < windowHeight - revealPoint) {
+          element.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkReveal);
+    window.addEventListener('load', checkReveal);
+
+    // 初始检查
+    checkReveal();
+
+    // 轮播图功能
+    document.addEventListener('DOMContentLoaded', function () {
+      // 初始化所有轮播图
+      const carousels = document.querySelectorAll('.carousel');
+      carousels.forEach(carousel => {
+        initCarousel(carousel);
+      });
+    });
+
+    function initCarousel(carousel) {
+      const carouselId = carousel.id;
+      const slidesContainer = carousel.querySelector('.carousel-slides');
+      const slides = carousel.querySelectorAll('.carousel-slide');
+      const prevButton = carousel.querySelector('.carousel-control.prev');
+      const nextButton = carousel.querySelector('.carousel-control.next');
+      const indicators = carousel.querySelectorAll('.carousel-indicator');
+
+      let currentSlide = 0;
+      const slideCount = slides.length;
+
+      // 每个轮播项宽度设为100%
+      slides.forEach(slide => {
+        slide.style.width = '100%';
+      });
+
+      // 更新轮播图显示
+      function updateCarousel() {
+        // 计算滑动距离：当前索引 * 容器宽度
+        const slideDistance = -currentSlide * slidesContainer.offsetWidth;
+        slidesContainer.style.transform = `translateX(${slideDistance}px)`;
+
+        // 更新指示器
+        indicators.forEach((indicator, index) => {
+          if (index === currentSlide) {
+            indicator.classList.add('active');
+          } else {
+            indicator.classList.remove('active');
+          }
+        });
+      }
+
+      // 前一张按钮点击事件
+      prevButton.addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+        updateCarousel();
+      });
+
+      // 后一张按钮点击事件
+      nextButton.addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % slideCount;
+        updateCarousel();
+      });
+
+      // 指示器点击事件
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          currentSlide = index;
+          updateCarousel();
+        });
+      });
+
+      // 自动轮播
+      let autoplayInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % slideCount;
+        updateCarousel();
+      }, 5000);
+
+      // 鼠标悬停时暂停自动轮播
+      carousel.addEventListener('mouseenter', () => {
+        clearInterval(autoplayInterval);
+      });
+
+      // 鼠标离开时恢复自动轮播
+      carousel.addEventListener('mouseleave', () => {
+        autoplayInterval = setInterval(() => {
+          currentSlide = (currentSlide + 1) % slideCount;
+          updateCarousel();
+        }, 5000);
+      });
+
+      // 初始化显示第一张
+      updateCarousel();
+    }
+  </script>
+</body>
+
+</html>
