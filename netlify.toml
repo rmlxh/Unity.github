@@ -1,0 +1,45 @@
+[build]
+  # 发布目录设置为当前目录
+  publish = "."
+
+# 优化用户体验：确保访问路径始终以斜杠结尾
+[[redirects]]
+  from = "/2D-NCF"
+  to = "/2D-NCF/"
+  status = 301
+
+[[redirects]]
+  from = "/3D-TM"
+  to = "/3D-TM/"
+  status = 301
+
+[[redirects]]
+  from = "/AR-FDBC"
+  to = "/AR-FDBC/"
+  status = 301
+
+[[redirects]]
+  from = "/VR-HZYS"
+  to = "/VR-HZYS/"
+  status = 301
+
+# 核心配置：将所有请求路由到对应的index.html
+[[redirects]]
+  from = "/2D-NCF/*"
+  to = "/2D-NCF/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/3D-TM/*"
+  to = "/3D-TM/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/AR-FDBC/*"
+  to = "/AR-FDBC/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/VR-HZYS/*"
+  to = "/VR-HZYS/index.html"
+  status = 200
