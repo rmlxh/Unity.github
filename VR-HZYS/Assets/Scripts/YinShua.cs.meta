@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 92abd2abfbc2d464eae17dafeb39eed9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Shu: {fileID: 3051543943509800159, guid: a87aa5aa1ab432242bf00beef109cc3b, type: 3}
+  - Neng: {fileID: 6688575069245820261, guid: c591b0e243f7ed24690f6a2dc204a6ba, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
